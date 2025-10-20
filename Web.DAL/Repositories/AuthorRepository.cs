@@ -22,7 +22,7 @@ internal class AuthorRepository : IAuthorRepository
         return Task.FromResult<IEnumerable<Author>>(_authors);
     }
 
-    public  Task<Author?> GetByIdAsync(int id, CancellationToken cancellationToken)
+    public  Task<Author?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -48,10 +48,6 @@ internal class AuthorRepository : IAuthorRepository
         cancellationToken.ThrowIfCancellationRequested();
         
         var index = _authors.FindIndex(a => a.Id == entity.Id);
-        if (index == -1)
-        {
-            throw new KeyNotFoundException($"Author {entity.Id} not found.");
-        }
 
         _authors[index] = entity;
         return Task.FromResult(entity);

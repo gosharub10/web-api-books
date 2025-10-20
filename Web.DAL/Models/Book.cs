@@ -1,9 +1,9 @@
 namespace Web.DAL.Models;
 
-public class Book
+public sealed class Book
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string Title { get; set; }
     public int PublishYear { get; set; }
-    public int AuthorId { get; set; }
+    public Guid AuthorId { get; set; }
 }

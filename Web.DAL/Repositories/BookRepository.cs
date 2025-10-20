@@ -22,7 +22,7 @@ internal class BookRepository : IBookRepository
         return Task.FromResult<IEnumerable<Book>>(_books);
     }
 
-    public Task<Book?> GetByIdAsync(int id, CancellationToken cancellationToken)
+    public Task<Book?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -46,12 +46,8 @@ internal class BookRepository : IBookRepository
     public Task<Book> Update(Book entity, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-
-        var index = _books.FindIndex(b => b.Id == entity.Id);
-        if (index == -1)
-        {
-            throw new KeyNotFoundException($"Book with Id {entity.Id} not found.");
-        }
+        
+        var index = _books.FindIndex(a => a.Id == entity.Id);
 
         _books[index] = entity;
         return Task.FromResult(entity);

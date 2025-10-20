@@ -8,7 +8,7 @@ public static class ConfigureDAL
 {
     public static void AddDAL(this IServiceCollection services)
     {
-        services.AddScoped<IBookRepository, BookRepository>();
-        services.AddScoped<IAuthorRepository, IAuthorRepository>();
+        services.AddSingleton<IBookRepository, BookRepository>();
+        services.AddSingleton<IAuthorRepository, AuthorRepository>();
     }
 }
