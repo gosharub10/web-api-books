@@ -26,7 +26,7 @@ internal class BookService : IBookService
         ArgumentException.ThrowIfNullOrWhiteSpace(book.PublishYear.ToString());
         ArgumentException.ThrowIfNullOrWhiteSpace(book.AuthorId.ToString());
 
-        var existingAuthor = await _authorRepository.GetByIdAsync(book.AuthorId, cancellationToken) ?? throw new KeyNotFoundException("Author not found");
+        _ = await _authorRepository.GetByIdAsync(book.AuthorId, cancellationToken) ?? throw new KeyNotFoundException("Author not found");
         
         var newBook = _mapper.Map<Book>(book);
         newBook.Id = Guid.NewGuid();
@@ -58,7 +58,7 @@ internal class BookService : IBookService
         ArgumentException.ThrowIfNullOrWhiteSpace(book.PublishYear.ToString());
         ArgumentException.ThrowIfNullOrWhiteSpace(book.AuthorId.ToString());
         
-        var existingAuthor = await _authorRepository.GetByIdAsync(book.AuthorId, cancellationToken) ?? throw new KeyNotFoundException("Author not found");
+        _ = await _authorRepository.GetByIdAsync(book.AuthorId, cancellationToken) ?? throw new KeyNotFoundException("Author not found");
 
         _ = await _bookRepository.GetByIdAsync(id, cancellationToken) ??
             throw new KeyNotFoundException("Book not found");
