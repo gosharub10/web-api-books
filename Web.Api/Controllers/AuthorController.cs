@@ -55,4 +55,20 @@ public class AuthorController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpGet("count/book")]
+    public async Task<IActionResult> GetAuthorsWithBookCount(CancellationToken cancellationToken)
+    {
+        var authors = await _authorService.GetAuthorsWithBookCount(cancellationToken);
+        
+        return Ok(authors);
+    }
+
+    [HttpGet("search/{name}")]
+    public async Task<IActionResult> GetAuthorByName(string name, CancellationToken cancellationToken)
+    {
+        var authors = await _authorService.GetAuthorByName(name, cancellationToken);
+        
+        return Ok(authors);
+    }
 }

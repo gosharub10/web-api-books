@@ -1,55 +1,63 @@
+using Microsoft.EntityFrameworkCore;
+using Web.DAL.Context;
 using Web.DAL.Interfaces;
 using Web.DAL.Models;
 
 namespace Web.DAL.Repositories;
 
-internal class BookRepository : IBookRepository
+internal class BookRepository(LibraryContext context) : IBookRepository
 {
-    private readonly List<Book> _books = new();
+    private readonly LibraryContext  _context = context;
 
-    public Task<Book> Create(Book entity, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        _books.Add(entity);
-        return Task.FromResult(entity);
-    }
-
-    public Task<IEnumerable<Book>> GetAll(CancellationToken cancellationToken)
+    public async Task<Book> Create(Book entity, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         
-        return Task.FromResult<IEnumerable<Book>>(_books);
+        await _context.Books.AddAsync(entity, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+        
+        return entity;
     }
 
-    public Task<Book?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<IEnumerable<Book>> GetAll(CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        
+        return await _context.Books
+            .Include(a => a.Author)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<Book?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var book = _books.Find(b => b.Id == id);
-        return Task.FromResult(book);
+        return await _context.Books
+            .Include(a => a.Author)
+            .FirstOrDefaultAsync(b => b.Id == id, cancellationToken);
     }
 
-    public Task Delete(Book entity, CancellationToken cancellationToken)
+    public async Task Delete(Book entity, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var book = _books.Find(b => b.Id == entity.Id);
-        if (book != null)
+        var existingEntity = await _context.Books.FirstOrDefaultAsync(b => b.Id == entity.Id, cancellationToken);
+        if (existingEntity != null)
         {
-            _books.Remove(book);
+            _context.Books.Remove(existingEntity);
         }
-
-        return Task.CompletedTask;
+        
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public Task<Book> Update(Book entity, CancellationToken cancellationToken)
+    public async Task<Book> Update(Book entity, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         
-        var index = _books.FindIndex(a => a.Id == entity.Id);
-
-        _books[index] = entity;
-        return Task.FromResult(entity);
+        _context.Books.Update(entity);
+        await _context.SaveChangesAsync(cancellationToken);
+        
+        return entity;
     }
 }

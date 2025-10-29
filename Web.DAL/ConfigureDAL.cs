@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Web.DAL.Context;
 using Web.DAL.Interfaces;
 using Web.DAL.Repositories;
 
@@ -8,7 +10,7 @@ public static class ConfigureDAL
 {
     public static void AddDAL(this IServiceCollection services)
     {
-        services.AddSingleton<IBookRepository, BookRepository>();
-        services.AddSingleton<IAuthorRepository, AuthorRepository>();
+        services.AddScoped<IBookRepository, BookRepository>();
+        services.AddScoped<IAuthorRepository, AuthorRepository>();
     }
 }

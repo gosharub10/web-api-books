@@ -10,4 +10,5 @@ public interface IBookService
     Task<GetBook> GetBookById(Guid id, CancellationToken cancellationToken);
     Task<GetBook> UpdateBook(Guid id, UpdateBook book, CancellationToken cancellationToken);
     Task DeleteBook(Guid id, CancellationToken cancellationToken);
+    Task<IEnumerable<GetBook>> GetBooksPublishedAfterYear(int year, CancellationToken cancellationToken);
 }

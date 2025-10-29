@@ -55,4 +55,12 @@ public class BookController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpGet("published-after")]
+    public async Task<IActionResult> GetPublishedAfterYear([FromQuery] int year, CancellationToken cancellationToken)
+    {
+        var books = await _bookService.GetBooksPublishedAfterYear(year, cancellationToken);
+        
+        return Ok(books);
+    }
 }

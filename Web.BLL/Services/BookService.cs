@@ -78,4 +78,13 @@ internal class BookService : IBookService
 
         await _bookRepository.Delete(finded, cancellationToken);
     }
+
+    public async Task<IEnumerable<GetBook>> GetBooksPublishedAfterYear(int year, CancellationToken cancellationToken)
+    {
+        var books = await _bookRepository.GetAll(cancellationToken);
+        
+        var bookAfterYear =  books.Where(b => b.PublishYear >= year);
+        
+        return _mapper.Map<IEnumerable<GetBook>>(bookAfterYear);
+    }
 }
