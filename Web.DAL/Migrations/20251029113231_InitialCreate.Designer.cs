@@ -12,7 +12,7 @@ using Web.DAL.Context;
 namespace Web.DAL.Migrations
 {
     [DbContext(typeof(LibraryContext))]
-    [Migration("20251029105258_InitialCreate")]
+    [Migration("20251029113231_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -84,14 +84,14 @@ namespace Web.DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f09236b7-f69e-4cbe-9564-8c04b4f7baff"),
+                            Id = new Guid("219fa2c0-3676-43bd-b0c0-3b3bc89ec3a0"),
                             AuthorId = new Guid("9d650ba5-7dce-4d35-aedd-ffe78a67b5f1"),
                             PublishYear = 1869,
                             Title = "Война и мир"
                         },
                         new
                         {
-                            Id = new Guid("ba878172-ff3d-4577-94ae-aa032d8e6177"),
+                            Id = new Guid("c6db4cc8-7cd5-46f0-9c1b-0562ef54fc36"),
                             AuthorId = new Guid("075bee32-2334-4d14-8867-e348ec4fb419"),
                             PublishYear = 1866,
                             Title = "Преступление и наказание"
