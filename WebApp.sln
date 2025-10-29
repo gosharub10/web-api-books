@@ -14,6 +14,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "git", "git", "{3693DA8C-DE3
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{BCAD2049-2E82-44FF-A9DC-45E7CADC3CEE}"
+	ProjectSection(SolutionItems) = preProject
+		compose.yml = compose.yml
+		.env = .env
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

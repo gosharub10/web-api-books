@@ -1,55 +1,63 @@
+using Microsoft.EntityFrameworkCore;
+using Web.DAL.Context;
 using Web.DAL.Interfaces;
 using Web.DAL.Models;
 
 namespace Web.DAL.Repositories;
 
-internal class AuthorRepository : IAuthorRepository
+internal class AuthorRepository(LibraryContext context) : IAuthorRepository
 {
-    private readonly List<Author> _authors = [];
+    private readonly LibraryContext _context = context;
 
-    public Task<Author> Create(Author entity, CancellationToken cancellationToken)
+    public async Task<Author> Create(Author entity, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        _authors.Add(entity);
-        return Task.FromResult(entity);
+        await _context.Authors.AddAsync(entity, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return entity;
     }
 
-    public Task<IEnumerable<Author>> GetAll(CancellationToken cancellationToken)
+    public async Task<IEnumerable<Author>> GetAll(CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        return Task.FromResult<IEnumerable<Author>>(_authors);
+        return await _context.Authors
+            .Include(a => a.Books)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
     }
 
-    public  Task<Author?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        var author = _authors.Find(a => a.Id == id);
-        return Task.FromResult(author);
-    }
-
-    public Task Delete(Author entity, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        var author = _authors.Find(a => a.Id == entity.Id);
-        if (author != null)
-        {
-            _authors.Remove(author);
-        }
-
-        return Task.CompletedTask;
-    }
-
-    public Task<Author> Update(Author entity, CancellationToken cancellationToken)
+    public async Task<Author?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         
-        var index = _authors.FindIndex(a => a.Id == entity.Id);
+        return await _context.Authors
+            .Include(a => a.Books)
+            .FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
+    }
 
-        _authors[index] = entity;
-        return Task.FromResult(entity);
+    public async Task Delete(Author entity, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var existingEntity = _context.Authors.FirstOrDefault(a => a.Id == entity.Id);
+        if (existingEntity != null)
+        {
+            _context.Authors.Remove(existingEntity);
+        }
+        
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<Author> Update(Author entity, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        _context.Authors.Update(entity);
+        await _context.SaveChangesAsync(cancellationToken);
+        
+        return entity;
     }
 }

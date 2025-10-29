@@ -10,4 +10,6 @@ public interface IAuthorService
     Task<GetAuthor> GetAuthorById(Guid id, CancellationToken cancellationToken);
     Task<GetAuthor> UpdateAuthor(Guid id, UpdateAuthor author, CancellationToken cancellationToken);
     Task DeleteAuthor(Guid id, CancellationToken cancellationToken);
+    Task<IEnumerable<GetAuthorsWithBookCount>> GetAuthorsWithBookCount(CancellationToken cancellationToken); 
+    Task<IEnumerable<GetAuthor>> GetAuthorByName(string name, CancellationToken cancellationToken);
 }

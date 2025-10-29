@@ -70,4 +70,30 @@ internal class AuthorService : IAuthorService
 
         await _authorRepository.Delete(finded, cancellationToken);
     }
+
+    public async Task<IEnumerable<GetAuthorsWithBookCount>> GetAuthorsWithBookCount(CancellationToken cancellationToken)
+    {
+        var authors = await _authorRepository.GetAll(cancellationToken);
+        
+        var authorsWithBookCount = authors.Select(a =>
+            new GetAuthorsWithBookCount
+            {
+                Id = a.Id,
+                Name = a.Name,
+                DateOfBirth = a.DateOfBirth,
+                BookCount = a.Books.Count
+            }
+        );
+        
+        return authorsWithBookCount;
+    }
+
+    public async Task<IEnumerable<GetAuthor>> GetAuthorByName(string name, CancellationToken cancellationToken)
+    {
+        var authors = await _authorRepository.GetAll(cancellationToken);
+
+        var findedAuthor = authors.Where(a => a.Name.StartsWith(name, StringComparison.OrdinalIgnoreCase)).ToList();
+        
+        return _mapper.Map<IEnumerable<GetAuthor>>(findedAuthor);
+    }
 }
